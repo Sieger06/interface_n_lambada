@@ -1,12 +1,15 @@
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
-        // Exercise 1 (Predicate)
+
+// Exercise 1 (Predicate)
         Integer num1 = 1;
         Integer num2 = -1;
 
@@ -31,7 +34,7 @@ public class Main {
         String name1 = "Alex";
         String name2 = "John";
         System.out.println("Anonymous class:");
-        Consumer<String> consumer1 = new Consumer<String>() {
+        Consumer <String> consumer1 = new Consumer<String>() {
             @Override
             public void accept(String s) {
                 System.out.println("Hello, my name is " + s);
@@ -53,7 +56,7 @@ public class Main {
         Double d2 = 9.75;
 
         System.out.println("Anonymous class:");
-        Function<Double, Long> function1 = new Function<Double, Long>() {
+        Function <Double, Long> function1 = new Function<Double, Long>() {
             @Override
             public Long apply(Double aDouble) {
                 return aDouble.longValue();
@@ -101,6 +104,29 @@ public class Main {
         System.out.println(ternaryOperator.apply(s1).getClass().getSimpleName() + " - " + ternaryOperator.apply(s1));
         System.out.println(ternaryOperator.apply(s2).getClass().getSimpleName() + " - " + ternaryOperator.apply(s2));
 
+        System.out.println(".....................");
+
+
+// Homework on the topic "Stream"
+// Exercise 1
+        Integer [] num = new Integer[10];
+        for (int i = 0; i < num.length; i++) {
+            num[i] = i;
+        }
+        Stream<Integer> strInteger = Arrays.stream(num);
+        Comparator <Integer> comparator = ((o1, o2) -> (o1 > o2) ? 1 : -1);
+        BiConsumer <Integer, Integer> biConsumer = (i1, i2) -> System.out.println("First - " + i1 + "; Last - " + i2);
+        findMinMax(strInteger, comparator,biConsumer);
+
+// Exercise 2
+        Stream <Integer> stream = Arrays.stream(num).filter(x -> x%2==0);
+        System.out.println(stream.count());
+
+
+// Задание 2
+//Реализуйте метод, который принимает на вход список целых чисел и
+// определяет количество четных и выводит их в консоль.
+// Решать именно с применением Stream API.
     }
 
     public static <T, U> Function <T, U> ternaryOperator (
@@ -109,5 +135,20 @@ public class Main {
             Function <? super T, ? extends U> ifFalse
     ) {
         return  t -> condition.test(t) ? ifTrue.apply(t) : ifFalse.apply(t);
+    }
+
+    public static <T> void findMinMax (
+            Stream <? extends T> stream,
+            Comparator <? super T> order,
+            BiConsumer <? super T, ? super T> minMaxConsumer
+    ){
+        List <T> list = stream.collect(Collectors.toList());
+        T min = null;
+        T max = null;
+        if (list.size()!=0){
+            min = list.get(0);
+            max = list.get(list.size()-1);
+        }
+        minMaxConsumer.accept(min, max);
     }
 }
