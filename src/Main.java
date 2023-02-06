@@ -1,7 +1,4 @@
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -136,18 +133,19 @@ public class Main {
     ) {
         return  t -> condition.test(t) ? ifTrue.apply(t) : ifFalse.apply(t);
     }
-
     public static <T> void findMinMax (
             Stream <? extends T> stream,
             Comparator <? super T> order,
-            BiConsumer <? super T, ? super T> minMaxConsumer
-    ){
-        List <T> list = stream.collect(Collectors.toList());
+            BiConsumer <? super T, ? super T> minMaxConsumer){
+        List<T> arrayList;
         T min = null;
         T max = null;
-        if (list.size()!=0){
-            min = list.get(0);
-            max = list.get(list.size()-1);
+        arrayList = stream
+                .sorted(order)
+                .collect(Collectors.toList());
+        if (arrayList.size() != 0) {
+            min = arrayList.get(0);
+            max = arrayList.get(arrayList.size() - 1);
         }
         minMaxConsumer.accept(min, max);
     }
